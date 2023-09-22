@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('GitHub Code Pulling') {
+            steps {
+                git branch: 'main', url: 'https://github.com/k609627/css-temp.git'   
+            }
+        }
+        
+        stage('SonarQube Analysis') {
+    // some block
+
+            steps {
+                script {
+                    def scannerHome = tool 'Sonarqube'
+                    withSonarQubeEnv("Sonarqube") {
+                        sh """
+                             ${scannerHome}/bin/sonar-scanner \
+                            -Dsonar.projectKey=front-end \
+                            -Dsonar.host.url=http://172.18.0.2:9000 \
+                            -Dsonar.login=sqp_24930f4858f09e9de6fc47c5136091d237b869d0 \
+                        """
+                    }
+                }
+            }
+        }
+    }
+}
